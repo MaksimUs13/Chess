@@ -3,48 +3,56 @@
 
 #include <iostream>
 
-int main(void)
+void framebuffer_size_callback(GLFWwindow* pWindow, int width, int height);
+void processInput(GLFWwindow* window);
+
+int main() {
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	GLFWwindow* pWindow = glfwCreateWindow(800, 600, "Chess", NULL, NULL);
+	if (pWindow == NULL) {
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+
+	glfwSetFramebufferSizeCallback(pWindow, framebuffer_size_callback);
+
+	glfwMakeContextCurrent(pWindow);
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return -1;
+	}
+	glViewport(0, 0, 800, 600);
+
+	while (!glfwWindowShouldClose(pWindow)) 
+	{    
+		// Input
+		processInput(pWindow);
+
+		// rendering commands here
+		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// check and call events and swap the buffers
+		glfwSwapBuffers(pWindow);
+		glfwPollEvents();
+	}
+	glfwTerminate();
+	return 0;
+}
+
+void framebuffer_size_callback(GLFWwindow* pWindow, int width, int height)
 {
-    GLFWwindow* window;
+	glViewport(0, 0, width, height);
+}
 
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
-
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-
-    if (!gladLoadGL()) 
-    {
-        std::cout << "Can't load glad!\n";
-        return -1;
-    }
-
-    std::cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << '\n';
-
-    glClearColor(0, 1, 0, 1);
-
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-
-        /* Poll for and process events */
-        glfwPollEvents();
-    }
-
-    glfwTerminate();
-    return 0;
+void processInput(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
 }
