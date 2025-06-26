@@ -29,7 +29,7 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 
 add_subdirectory(thirdparty/glfw-master)			#window opener
-add_subdirectory(thirdparty/glad)
+add_subdirectory(thirdparty/glad)                               #opengl loader
 
 
 add_executable(${CMAKE_PROJECT_NAME} "src/main.cpp")
